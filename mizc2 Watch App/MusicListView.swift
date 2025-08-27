@@ -8,18 +8,54 @@
 import SwiftUI
 import Combine
 
-struct MusicListView: View {
-    @StateObject private var searchMusic = SearchMusic.shared
-    
+struct MusicListMainView: View {
+    @StateObject private var tempmusicseleter = tempMusicSelecter.shared
+
     @State private var viewWidth: CGFloat = 0
     @State private var viewHeight: CGFloat = 0
+    @State private var isopenmusicdetail: Bool = false
+    @State private var islongpress: Bool = false
     
-    @Namespace private var animation
+    @Namespace private var animationNamespcace
     
+    var body: some View {
+        Group {
+            if !isopenmusicdetail {
+                MusicListView(isopenmusicdetail: $isopenmusicdetail, islongpress: $islongpress, namespace: animationNamespcace)
+            } else {
+                Color.white.ignoresSafeArea()
+                if let coverid = tempmusicseleter.selectedMusicItem?.id {
+                    MusicDetailView(isopenmusicdetail: $isopenmusicdetail, namespace: animationNamespcace, coverid: coverid)
+                        .toolbar{
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                        isopenmusicdetail.toggle()
+                                    }
+                                }) {
+                                    Image(systemName: "xmark")
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    }
+}
+
+struct MusicListView: View {
+    @StateObject private var searchMusic = SearchMusic.shared
+    @StateObject private var tempmusicseleter = tempMusicSelecter.shared
+
+    @Binding var isopenmusicdetail: Bool
+    @Binding var islongpress: Bool
+
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+
+    var namespace: Namespace.ID
     
     var body: some View {
         VStack {
@@ -35,28 +71,43 @@ struct MusicListView: View {
                             ForEach(searchMusic.musicitems) { item in
                                 VStack {
                                     Button(action: {
-                                        print("按下了\(item.name)")
+                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                            if islongpress == false {
+                                                tempmusicseleter.play(selecteditem: item)
+                                                
+                                                isopenmusicdetail.toggle()
+                                            }
+                                        }
                                     }) {
                                         VStack {
                                             if let cover = item.cover {
-                                                CoverImage(coverimage: cover)
+                                                CoverImage(coverimage: cover, coverid: item.id,namespace: namespace)
                                                     .frame(width: 100, height: 100)
                                             } else {
                                                 Rectangle()
                                                     .fill(Color.gray.opacity(0.3))
                                                     .frame(width: 50, height: 50)
                                                     .cornerRadius(5)
-                                                    .overlay(Text("No Cover").font(.caption2))
+                                                    .overlay(Text("没有封面").font(.caption2))
                                             }
                                         }
                                         .padding(.vertical, 4)
                                     }
                                     .buttonStyle(.plain)
+                                    .simultaneousGesture(
+                                        LongPressGesture(minimumDuration: 1)
+                                            .onEnded{ _ in
+                                                tempmusicseleter.select(selecteditem: item)
+                                                
+                                                islongpress.toggle()
+                                            }
+                                    )
                                     
                                     Text(item.name)
                                         .bold()
                                         .frame(maxWidth: .infinity)
-                                        .multilineTextAlignment(.center)  // 居中文本
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(2)
                                         .padding(2)
                                 }
                             }
@@ -66,10 +117,12 @@ struct MusicListView: View {
                 }
             }
         }
+        .sheet(isPresented: $islongpress) {
+            LongPressView()
+        }
         .task {
             await searchMusic.fetchMusicItems()
         }
         .navigationTitle("MIZC2")
     }
 }
-

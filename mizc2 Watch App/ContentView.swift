@@ -9,9 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            MusicListView()
+        ZStack {
+            Color.white.ignoresSafeArea()
+            NavigationStack {
+                MusicListMainView()
+            }
         }
+        .foregroundStyle(Color.pink)
     }
 }
 

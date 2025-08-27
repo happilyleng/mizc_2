@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3795660D2E5F720600A1E224 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3795660C2E5F720600A1E224 /* AVKit.framework */; };
+		3795660F2E5F720C00A1E224 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3795660E2E5F720C00A1E224 /* AVFoundation.framework */; };
 		37B37BE22E5E1D460024DA6A /* mizc2 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 37B37BE12E5E1D460024DA6A /* mizc2 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3795660C2E5F720600A1E224 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.0.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
+		3795660E2E5F720C00A1E224 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		37B37BD42E5E1D450024DA6A /* mizc2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mizc2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37B37BE12E5E1D460024DA6A /* mizc2 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mizc2 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -64,17 +68,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3795660F2E5F720C00A1E224 /* AVFoundation.framework in Frameworks */,
+				3795660D2E5F720600A1E224 /* AVKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3795660B2E5F720600A1E224 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3795660E2E5F720C00A1E224 /* AVFoundation.framework */,
+				3795660C2E5F720600A1E224 /* AVKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		37B37BCB2E5E1D450024DA6A = {
 			isa = PBXGroup;
 			children = (
 				37B37BD62E5E1D450024DA6A /* mizc2 */,
 				37B37BE52E5E1D460024DA6A /* mizc2 Watch App */,
+				3795660B2E5F720600A1E224 /* Frameworks */,
 				37B37BD52E5E1D450024DA6A /* Products */,
 			);
 			sourceTree = "<group>";

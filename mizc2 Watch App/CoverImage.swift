@@ -9,8 +9,12 @@ import SwiftUI
 
 struct CoverImage: View {
     var coverimage: UIImage
+    var coverid: UUID
     @State private var viewWidth: CGFloat = 0
     @State private var viewHeight: CGFloat = 0
+    
+    @StateObject private var musicplayer = MusicPlayer.shared
+    var namespace: Namespace.ID
 
     var body: some View {
         GeometryReader { geometry in
@@ -26,6 +30,7 @@ struct CoverImage: View {
                     .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 6))
                     .frame(width: (viewWidth - 10), height: (viewHeight - 10))
+                    .matchedGeometryEffect(id: coverid, in: namespace)
             }
             .onAppear {
                 viewWidth = geometry.size.width

@@ -43,6 +43,16 @@
 		37B37BE12E5E1D460024DA6A /* mizc2 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mizc2 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		379566162E5F873800A1E224 /* Exceptions for "mizc2 Watch App" folder in "mizc2 Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"mizc2-Watch-App-Info.plist",
+			);
+			target = 37B37BE02E5E1D460024DA6A /* mizc2 Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		37B37BD62E5E1D450024DA6A /* mizc2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -51,6 +61,9 @@
 		};
 		37B37BE52E5E1D460024DA6A /* mizc2 Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				379566162E5F873800A1E224 /* Exceptions for "mizc2 Watch App" folder in "mizc2 Watch App" target */,
+			);
 			path = "mizc2 Watch App";
 			sourceTree = "<group>";
 		};
@@ -360,6 +373,7 @@
 				DEVELOPMENT_TEAM = XV4SMAXZP4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mizc2-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mizc2;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = Cindyleng.mizc2;
@@ -393,6 +407,7 @@
 				DEVELOPMENT_TEAM = XV4SMAXZP4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mizc2-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mizc2;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = Cindyleng.mizc2;

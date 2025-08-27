@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import AVFoundation
+import MediaPlayer
 import AVKit
 
 final class tempMusicSelecter: ObservableObject {
@@ -39,11 +39,30 @@ final class MusicPlayer: ObservableObject {
     func start() {
         if let selectedMusicItem = tempmusicselecter.selectedMusicItem {
             let player = AVPlayer(url: selectedMusicItem.pth)
-
+            
             nowplayer = player
             nowplayingMusicItem = selectedMusicItem
             
             player.play()
+            setupNowPlayingInfo(with: selectedMusicItem, player: player)
         }
+    }
+    
+    private func setupNowPlayingInfo(with: MusicItem, player: AVPlayer) {
+        let title = with.name
+        let artist = ""
+        
+        var nowPlayingInfo: [String: Any] = [
+            MPMediaItemPropertyTitle: title,
+            MPMediaItemPropertyArtist: artist,
+            MPMediaItemPropertyPlaybackDuration: player.currentItem?.asset.duration.seconds ?? 0,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: player.currentTime().seconds ?? 0
+        ]
+        
+        if let artwork = with.cover {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artwork.size) { _ in artwork }
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
 }

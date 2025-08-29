@@ -27,8 +27,16 @@ final class tempMusicSelecter: ObservableObject {
     }
 }
 
+struct MusicListItem: Identifiable {
+    let id = UUID()
+    var musicitem: MusicItem
+}
+
 final class MusicPlayer: ObservableObject {
     static let shared = MusicPlayer()
+    
+    @Published var playlist:[MusicListItem] = []
+    @Published var playingIndex: Int = 0
     
     @StateObject private var tempmusicselecter = tempMusicSelecter.shared
     
@@ -38,13 +46,28 @@ final class MusicPlayer: ObservableObject {
     
     func start() {
         if let selectedMusicItem = tempmusicselecter.selectedMusicItem {
-            let player = AVPlayer(url: selectedMusicItem.pth)
-            
-            nowplayer = player
-            nowplayingMusicItem = selectedMusicItem
-            
-            player.play()
-            setupNowPlayingInfo(with: selectedMusicItem, player: player)
+            let playlistitem = MusicListItem(musicitem: selectedMusicItem)
+            if playingIndex >= playlist.count {
+                playlist.append(playlistitem)
+                let player = AVPlayer(url: playlist[playingIndex].musicitem.pth)
+                nowplayer = player
+                nowplayingMusicItem = selectedMusicItem
+                
+                player.play()
+                setupNowPlayingInfo(with: selectedMusicItem, player: player)
+            } else {
+                playlist.insert(playlistitem, at: (playingIndex + 1))
+                let player = AVPlayer(url: playlist[(playingIndex + 1)].musicitem.pth)
+                nowplayer = player
+                nowplayingMusicItem = selectedMusicItem
+                
+                player.play()
+                setupNowPlayingInfo(with: selectedMusicItem, player: player)
+            }
+            if let index = playlist.firstIndex(where: { $0.id == playlistitem.id }) {
+                playingIndex = index
+            }
+            print(playingIndex)
         }
     }
     

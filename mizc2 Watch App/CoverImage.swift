@@ -9,12 +9,14 @@ import SwiftUI
 
 struct CoverImage: View {
     var coverimage: UIImage
-    var coverid: UUID
+    
     @State private var viewWidth: CGFloat = 0
     @State private var viewHeight: CGFloat = 0
     
     @StateObject private var musicplayer = MusicPlayer.shared
+    
     var namespace: Namespace.ID
+    var coverid: UUID
 
     var body: some View {
         GeometryReader { geometry in

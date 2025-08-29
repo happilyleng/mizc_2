@@ -15,6 +15,7 @@ struct MusicListMainView: View {
     @State private var viewHeight: CGFloat = 0
     @State private var isopenmusicdetail: Bool = false
     @State private var islongpress: Bool = false
+    @State private var isshowplaylist: Bool = false
     
     @Namespace private var animationNamespcace
     
@@ -22,6 +23,18 @@ struct MusicListMainView: View {
         Group {
             if !isopenmusicdetail {
                 MusicListView(isopenmusicdetail: $isopenmusicdetail, islongpress: $islongpress, namespace: animationNamespcace)
+                    .toolbar{
+                        ToolbarItem(placement: .bottomBar) {
+                            Button(action: {
+                                isshowplaylist.toggle()
+                            }) {
+                                Text("go")
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $isshowplaylist) {
+                        MusicPlaylistView()
+                    }
             } else {
                 Color.white.ignoresSafeArea()
                 if let coverid = tempmusicseleter.selectedMusicItem?.id {
@@ -71,7 +84,7 @@ struct MusicListView: View {
                             ForEach(searchMusic.musicitems) { item in
                                 VStack {
                                     Button(action: {
-                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                        withAnimation(.spring(duration: 0.5)) {
                                             if islongpress == false {
                                                 tempmusicseleter.play(selecteditem: item)
                                                 
@@ -81,7 +94,7 @@ struct MusicListView: View {
                                     }) {
                                         VStack {
                                             if let cover = item.cover {
-                                                CoverImage(coverimage: cover, coverid: item.id,namespace: namespace)
+                                                CoverImage(coverimage: cover, namespace: namespace, coverid: item.id)
                                                     .frame(width: 100, height: 100)
                                             } else {
                                                 Rectangle()

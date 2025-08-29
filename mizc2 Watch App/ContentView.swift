@@ -6,10 +6,17 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct ContentView: View {
+    @StateObject private var musicplayer = MusicPlayer.shared
+    
     var body: some View {
         ZStack {
+            if let nowplayer = musicplayer.nowplayer {
+                VideoPlayer(player: nowplayer)
+                    .focusable(false)
+            }
             Color.white.ignoresSafeArea()
             NavigationStack {
                 MusicListMainView()

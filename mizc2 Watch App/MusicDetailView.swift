@@ -16,22 +16,19 @@ struct MusicDetailView: View {
     var coverid: UUID
     
     var body: some View {
-        if let nowplayer = musicplayer.nowplayer {
-            if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
-                ZStack {
-                    VideoPlayer(player: nowplayer)
-                    Color.white.ignoresSafeArea()
-                    VStack {
-                        Spacer()
-                        if let cover = nowplayingMusicItem.cover {
-                            let id = nowplayingMusicItem.id
-                            CoverImage(coverimage: cover, coverid: id,namespace: namespace)
-                                .frame(width: 200,height: 200)
-                        }
-                        Spacer()
+        if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
+            ZStack {
+                Color.white.ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    if let cover = nowplayingMusicItem.cover {
+                        let id = nowplayingMusicItem.id
+                        CoverImage(coverimage: cover, namespace: namespace, coverid: id)
+                            .frame(width: 200,height: 200)
                     }
-                    .ignoresSafeArea()
+                    Spacer()
                 }
+                .ignoresSafeArea()
             }
         }
     }

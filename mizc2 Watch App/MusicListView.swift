@@ -10,12 +10,14 @@ import Combine
 
 struct MusicListMainView: View {
     @StateObject private var tempmusicseleter = tempMusicSelecter.shared
+    @StateObject private var musicplayer = MusicPlayer.shared
 
     @State private var viewWidth: CGFloat = 0
     @State private var viewHeight: CGFloat = 0
     @State private var isopenmusicdetail: Bool = false
     @State private var islongpress: Bool = false
     @State private var isshowplaylist: Bool = false
+    @State private var isshowsetting: Bool = false
     
     @Namespace private var animationNamespcace
     
@@ -28,12 +30,40 @@ struct MusicListMainView: View {
                             Button(action: {
                                 isshowplaylist.toggle()
                             }) {
-                                Text("go")
+                                Image(systemName: "list.bullet")
+                            }
+                        }
+                        
+                        ToolbarItem(placement: .bottomBar) {
+                            Button(action: {
+                                isshowsetting.toggle()
+                            }) {
+                                Image(systemName: "gear")
+                            }
+                        }
+                        
+                        ToolbarItem(placement: .confirmationAction){
+                            if musicplayer.isPlaying {
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                        isopenmusicdetail.toggle()
+                                    }
+                                }) {
+                                    if let cover = musicplayer.nowplayingMusicItem?.cover {
+                                        Image(uiImage: cover)
+                                            .scaledToFit()
+                                            .frame(width: 30,height: 30)
+                                            .clipShape(Circle())
+                                    }
+                                }
                             }
                         }
                     }
                     .sheet(isPresented: $isshowplaylist) {
                         MusicPlaylistView()
+                    }
+                    .sheet(isPresented: $isshowsetting) {
+                        SettingView()
                     }
             } else {
                 Color.white.ignoresSafeArea()
@@ -57,6 +87,9 @@ struct MusicListMainView: View {
 }
 
 struct MusicListView: View {
+    @AppStorage("MusicListWidth") private var MusicListWidth: Int = 100
+    @AppStorage("MusicListHeight") private var MusicListHeight: Int = 100
+    
     @StateObject private var searchMusic = SearchMusic.shared
     @StateObject private var tempmusicseleter = tempMusicSelecter.shared
 
@@ -95,16 +128,16 @@ struct MusicListView: View {
                                         VStack {
                                             if let cover = item.cover {
                                                 CoverImage(coverimage: cover, namespace: namespace, coverid: item.id)
-                                                    .frame(width: 100, height: 100)
+                                                    .frame(width: CGFloat(MusicListHeight), height: CGFloat(MusicListHeight))
                                             } else {
                                                 Rectangle()
                                                     .fill(Color.gray.opacity(0.3))
-                                                    .frame(width: 50, height: 50)
+                                                    .frame(width: CGFloat(MusicListHeight), height: CGFloat(MusicListHeight))
                                                     .cornerRadius(5)
                                                     .overlay(Text("没有封面").font(.caption2))
                                             }
                                         }
-                                        .padding(.vertical, 4)
+                                        .padding(.vertical, 2)
                                     }
                                     .buttonStyle(.plain)
                                     .simultaneousGesture(
@@ -126,12 +159,13 @@ struct MusicListView: View {
                             }
                             .padding()
                         }
+                        .padding(.horizontal,4)
                     }
                 }
             }
         }
         .sheet(isPresented: $islongpress) {
-            LongPressView()
+            LongPressView(isshow: $islongpress)
         }
         .task {
             await searchMusic.fetchMusicItems()

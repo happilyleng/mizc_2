@@ -40,6 +40,14 @@ struct MusicPlaylistView: View {
                                     .scaledToFit()
                                     .clipShape(RoundedRectangle(cornerRadius: 6))
                                     .frame(width: 100, height: 100)
+                                    .overlay(
+                                        Group {
+                                            if index == musicplayer.playingIndex {
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .stroke(Color.white, lineWidth: 2)
+                                            }
+                                        }
+                                    )
                             }
                             .tag(index)
                         }

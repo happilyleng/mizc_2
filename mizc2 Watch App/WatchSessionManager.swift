@@ -9,6 +9,7 @@ import WatchConnectivity
 import SwiftUI
 import Combine
 
+@Observable
 class WatchSessionManager: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = WatchSessionManager()
     
@@ -21,19 +22,22 @@ class WatchSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
     
-    // 接收 iPhone 发送的 MP3
     func session(_ session: WCSession, didReceive file: WCSessionFile) {
         let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let dest = documents.appendingPathComponent(file.fileURL.lastPathComponent)
         do {
             try FileManager.default.moveItem(at: file.fileURL, to: dest)
             print("收到 MP3:", file.fileURL.lastPathComponent)
-            // 你已有读取列表的代码，这里不做 UI 刷新
         } catch {
             print("保存失败:", error)
         }
     }
     
-    // WCSessionDelegate 必须方法
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    func session(_ session: WCSession, activationDidCompleteWith state: WCSessionActivationState, error: Error?) {
+        if let error = error {
+            print("Watch端 WCSession 激活失败: \(error)")
+        } else {
+            print("Watch端 WCSession 激活成功，状态: \(state.rawValue)")
+        }
+    }
 }

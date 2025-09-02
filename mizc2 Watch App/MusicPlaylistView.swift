@@ -71,13 +71,53 @@ struct MusicPlaylistView: View {
                 }
             }
             .onAppear{
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                    selectedTab = musicplayer.playingIndex
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    withAnimation {
+                        selectedTab = musicplayer.playingIndex
+                    }
                 }
             }
             .ignoresSafeArea()
         } else {
             Text("没有歌曲")
+        }
+    }
+}
+
+struct MusicDetailPlaylistView: View {
+    @StateObject private var musicplayer = MusicPlayer.shared
+    @State private var selectedTab = 0
+
+    var body: some View {
+        let playlist = musicplayer.playlist
+        if !playlist.isEmpty {
+            Form {
+                ForEach(Array(playlist.enumerated()), id: \.element.id) { index,item in
+                    if let cover = item.musicitem.cover {
+                        HStack {
+                            Image(uiImage: cover)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .frame(width: 30, height: 30)
+                                .padding()
+                            Text(item.musicitem.name)
+                                .lineLimit(2)
+                                .bold()
+                                .shadow(radius: 6)
+                                .padding()
+                        }
+                        .overlay(
+                            Group {
+                                if index == musicplayer.playingIndex {
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .stroke(.ultraThickMaterial, lineWidth: 2)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

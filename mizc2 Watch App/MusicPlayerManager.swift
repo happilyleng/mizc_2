@@ -137,8 +137,8 @@ final class MusicPlayer: ObservableObject {
     }
     
     func previou() {
-        moveMusic()
         if playingIndex > 0 {
+            moveMusic()
             let player = AVPlayer(url: playlist[(playingIndex - 1)].musicitem.pth)
             nowplayer = player
             nowplayingMusicItem = playlist[(playingIndex - 1)].musicitem
@@ -149,14 +149,14 @@ final class MusicPlayer: ObservableObject {
             isPlaying = true
             setupNowPlayingInfo(with: playlist[(playingIndex - 1)].musicitem, player: player)
             playingIndex -= 1
-        }
-        if let duration = nowplayer?.currentItem?.asset.duration {
-            self.duration = CMTimeGetSeconds(duration)
+            if let duration = nowplayer?.currentItem?.asset.duration {
+                self.duration = CMTimeGetSeconds(duration)
+            }
         }
     }
     func next() {
-        moveMusic()
         if playingIndex + 1 < playlist.count {
+            moveMusic()
             let player = AVPlayer(url: playlist[(playingIndex + 1)].musicitem.pth)
             nowplayer = player
             nowplayingMusicItem = playlist[(playingIndex + 1)].musicitem
@@ -167,9 +167,9 @@ final class MusicPlayer: ObservableObject {
             isPlaying = true
             setupNowPlayingInfo(with: playlist[(playingIndex + 1)].musicitem, player: player)
             playingIndex += 1
-        }
-        if let duration = nowplayer?.currentItem?.asset.duration {
-            self.duration = CMTimeGetSeconds(duration)
+            if let duration = nowplayer?.currentItem?.asset.duration {
+                self.duration = CMTimeGetSeconds(duration)
+            }
         }
     }
     

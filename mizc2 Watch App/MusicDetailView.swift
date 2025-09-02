@@ -19,27 +19,35 @@ struct MusicDetailView: View {
     var coverid: UUID
     
     var body: some View {
-        if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
-            ZStack(alignment: .bottom) {
-                Color.white.ignoresSafeArea()
+        TabView {
+            if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
                 VStack {
-                    Spacer()
-                    if let cover = nowplayingMusicItem.cover {
-                        let id = nowplayingMusicItem.id
-                        CoverImage(coverimage: cover, namespace: namespace, coverid: id)
-                            .frame(width: CGFloat(CoverWidth),height: CGFloat(CoverHeight))
-                            .scaleEffect(musicplayer.isPlaying ? 1 : 0.5)
+                    ZStack(alignment: .bottom) {
+                        Color.white.ignoresSafeArea()
+                        VStack {
+                            Spacer()
+                            if let cover = nowplayingMusicItem.cover {
+                                let id = nowplayingMusicItem.id
+                                CoverImage(coverimage: cover, namespace: namespace, coverid: id)
+                                    .frame(width: CGFloat(CoverWidth),height: CGFloat(CoverHeight))
+                                    .scaleEffect(musicplayer.isPlaying ? 1 : 0.5)
+                            }
+                            Spacer()
+                        }
+                        .ignoresSafeArea()
+                        VStack(spacing:4) {
+                            Spacer()
+                            ProgressBarView()
+                            ControlTools()
+                        }
+                        .ignoresSafeArea()
                     }
-                    Spacer()
                 }
-                .ignoresSafeArea()
-                VStack(spacing:4) {
-                    Spacer()
-                    ProgressBarView()
-                    ControlTools()
-                }
-                .ignoresSafeArea()
             }
+            
+            MusicDetailPlaylistView()
         }
+        .tabViewStyle(.verticalPage)
+        .ignoresSafeArea()
     }
 }

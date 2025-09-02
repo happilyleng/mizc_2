@@ -23,7 +23,7 @@ struct MusicListMainView: View {
     
     var body: some View {
         Group {
-            if !isopenmusicdetail {
+            if (!isopenmusicdetail && !isshowsetting) {
                 MusicListView(isopenmusicdetail: $isopenmusicdetail, islongpress: $islongpress, namespace: animationNamespcace)
                     .toolbar{
                         ToolbarItem(placement: .bottomBar) {
@@ -36,14 +36,16 @@ struct MusicListMainView: View {
                         
                         ToolbarItem(placement: .bottomBar) {
                             Button(action: {
-                                isshowsetting.toggle()
-                            }) {
+                                withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                    isshowsetting.toggle()
+                                }
+                            }){
                                 Image(systemName: "gear")
                             }
                         }
                         
                         ToolbarItem(placement: .confirmationAction){
-                            if musicplayer.isPlaying {
+                            if musicplayer.nowplayer != nil {
                                 Button(action: {
                                     withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                                         isopenmusicdetail.toggle()
@@ -51,37 +53,42 @@ struct MusicListMainView: View {
                                 }) {
                                     if let cover = musicplayer.nowplayingMusicItem?.cover {
                                         Image(uiImage: cover)
-                                            .scaledToFit()
+                                            .resizable()
+                                            .scaledToFill()
                                             .frame(width: 30,height: 30)
-                                            .clipShape(Circle())
+                                            .clipShape(RoundedRectangle(cornerRadius: 6))
                                     }
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
-                    }
-                    .sheet(isPresented: $isshowplaylist) {
-                        MusicPlaylistView()
-                    }
-                    .sheet(isPresented: $isshowsetting) {
-                        SettingView()
                     }
             } else {
-                Color.white.ignoresSafeArea()
-                if let coverid = tempmusicseleter.selectedMusicItem?.id {
-                    MusicDetailView(isopenmusicdetail: $isopenmusicdetail, namespace: animationNamespcace, coverid: coverid)
-                        .toolbar{
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button(action: {
-                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
-                                        isopenmusicdetail.toggle()
+                ZStack {
+                    Color.white.ignoresSafeArea()
+                    if let coverid = tempmusicseleter.selectedMusicItem?.id {
+                        MusicDetailView(isopenmusicdetail: $isopenmusicdetail, namespace: animationNamespcace, coverid: coverid)
+                            .ignoresSafeArea()
+                            .toolbar{
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button(action: {
+                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                            isopenmusicdetail.toggle()
+                                        }
+                                    }) {
+                                        Image(systemName: "xmark")
                                     }
-                                }) {
-                                    Image(systemName: "xmark")
                                 }
                             }
-                        }
+                    }
                 }
             }
+        }
+        .sheet(isPresented: $isshowplaylist) {
+            MusicPlaylistView()
+        }
+        .sheet(isPresented: $isshowsetting) {
+            SettingView()
         }
     }
 }
@@ -117,11 +124,13 @@ struct MusicListView: View {
                             ForEach(searchMusic.musicitems) { item in
                                 VStack {
                                     Button(action: {
-                                        withAnimation(.spring(duration: 0.5)) {
-                                            if islongpress == false {
-                                                tempmusicseleter.play(selecteditem: item)
-                                                
-                                                isopenmusicdetail.toggle()
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                            withAnimation(.spring(duration: 0.5)) {
+                                                if islongpress == false {
+                                                    tempmusicseleter.play(selecteditem: item)
+                                                    
+                                                    isopenmusicdetail.toggle()
+                                                }
                                             }
                                         }
                                     }) {

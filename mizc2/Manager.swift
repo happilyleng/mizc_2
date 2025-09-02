@@ -25,6 +25,30 @@ class iPhoneMP3Manager: NSObject, ObservableObject, WCSessionDelegate {
         loadMP3Files()
     }
     
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print("进入 WCSessionDelegateImpl 的 session 方法")
+        // 处理从 WatchOS 接收到的消息
+        if let message = message["msg"] as? [[String: Any]] {
+            print("接收到 \(message)")
+        }
+    }
+    
+    func session(_ session: WCSession, activationDidCompleteWith state: WCSessionActivationState, error: Error?) {
+        if state == .activated {
+            print("Watch端 WCSession 激活成功")
+        } else {
+            print("Watch端 WCSession 激活失败: \(String(describing: error))")
+        }
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("WCSession 会话变为非活跃.")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("WCSession 会话被停用.")
+    }
+    
     func loadMP3Files() {
         let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
@@ -61,9 +85,4 @@ class iPhoneMP3Manager: NSObject, ObservableObject, WCSessionDelegate {
             print("已发送到手表:", file.lastPathComponent)
         }
     }
-
-    // MARK: - WCSessionDelegate 必须实现
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
-    func sessionDidBecomeInactive(_ session: WCSession) {}
-    func sessionDidDeactivate(_ session: WCSession) {}
 }

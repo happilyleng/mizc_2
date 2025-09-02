@@ -99,7 +99,7 @@ struct SettingView: View {
                             }
                         }
                     VStack {
-                        Text("\(CoverWidth)")
+                        Text("\(MusicListWidth)")
                     }
                     ZStack {
                         Rectangle()

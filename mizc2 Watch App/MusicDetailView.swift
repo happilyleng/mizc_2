@@ -15,39 +15,48 @@ struct MusicDetailView: View {
     
     @StateObject private var musicplayer = MusicPlayer.shared
     @Binding var isopenmusicdetail: Bool
+
     var namespace: Namespace.ID
     var coverid: UUID
     
     var body: some View {
-        TabView {
-            if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
-                VStack {
-                    ZStack(alignment: .bottom) {
-                        Color.white.ignoresSafeArea()
-                        VStack {
-                            Spacer()
-                            if let cover = nowplayingMusicItem.cover {
-                                let id = nowplayingMusicItem.id
-                                CoverImage(coverimage: cover, namespace: namespace, coverid: id)
-                                    .frame(width: CGFloat(CoverWidth),height: CGFloat(CoverHeight))
-                                    .scaleEffect(musicplayer.isPlaying ? 1 : 0.5)
+        ZStack {
+            Color.white.ignoresSafeArea()
+            ScrollView {
+                if let nowplayingMusicItem = musicplayer.nowplayingMusicItem {
+                    VStack {
+                        ZStack(alignment: .bottom) {
+                            VStack {
+                                Spacer()
+                                if let cover = nowplayingMusicItem.cover {
+                                    let id = nowplayingMusicItem.id
+                                    CoverImage(coverimage: cover, namespace: namespace, coverid: id)
+                                        .frame(width: CGFloat(CoverWidth),height: CGFloat(CoverHeight))
+                                        .scaleEffect(musicplayer.isPlaying ? 1 : 0.5)
+                                }
+                                Spacer()
                             }
-                            Spacer()
+                            .ignoresSafeArea()
+                            VStack(spacing:4) {
+                                Spacer()
+                                ProgressBarView()
+                                ControlTools()
+                            }
+                            .ignoresSafeArea()
                         }
-                        .ignoresSafeArea()
-                        VStack(spacing:4) {
-                            Spacer()
-                            ProgressBarView()
-                            ControlTools()
-                        }
-                        .ignoresSafeArea()
+                        .padding(.vertical,30)
+                        Text(nowplayingMusicItem.name)
+                            .bold()
+                            .font(.title3)
+                        MusicDetailPlaylistView()
+                            .padding(.bottom,30)
                     }
                 }
             }
-            
-            MusicDetailPlaylistView()
+            .tabViewStyle(.verticalPage)
+            .ignoresSafeArea()
         }
-        .tabViewStyle(.verticalPage)
+        .navigationTitle(musicplayer.nowplayingMusicItem?.name ?? "")
         .ignoresSafeArea()
     }
 }

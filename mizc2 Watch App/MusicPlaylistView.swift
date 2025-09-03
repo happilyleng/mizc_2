@@ -89,9 +89,9 @@ struct MusicDetailPlaylistView: View {
     @State private var selectedTab = 0
 
     var body: some View {
-        let playlist = musicplayer.playlist
-        if !playlist.isEmpty {
-            Form {
+        VStack {
+            let playlist = musicplayer.playlist
+            if !playlist.isEmpty {
                 ForEach(Array(playlist.enumerated()), id: \.element.id) { index,item in
                     if let cover = item.musicitem.cover {
                         HStack {
@@ -107,6 +107,7 @@ struct MusicDetailPlaylistView: View {
                                 .shadow(radius: 6)
                                 .padding()
                         }
+                        .id(index)
                         .overlay(
                             Group {
                                 if index == musicplayer.playingIndex {

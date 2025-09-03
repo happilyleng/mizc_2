@@ -124,13 +124,10 @@ struct MusicListView: View {
                             ForEach(searchMusic.musicitems) { item in
                                 VStack {
                                     Button(action: {
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                            withAnimation(.spring(duration: 0.5)) {
-                                                if islongpress == false {
-                                                    tempmusicseleter.play(selecteditem: item)
-                                                    
-                                                    isopenmusicdetail.toggle()
-                                                }
+                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                                            if islongpress == false {
+                                                tempmusicseleter.play(selecteditem: item)
+                                                isopenmusicdetail.toggle()
                                             }
                                         }
                                     }) {
